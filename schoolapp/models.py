@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from .utils import dar_de_baja_estudiante_de_curso, inscribir_estudiante_en_curso, contratar_profesor_en_curso, despedir_profesor_de_curso
+from .utils import contratar_profesor_en_curso, despedir_profesor_de_curso
+from gestion_curso_institucion import dar_de_baja_estudiante_de_curso, inscribir_estudiante_en_curso, consultar_horario_de_estudiante
 
 class Institucion(models.Model):
     nombre = models.CharField(max_length=255)
@@ -33,6 +34,9 @@ class Estudiante(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+    def consultar_horario_de_estudiante(self):
+        return consultar_horario_de_estudiante(self)
 
 class Curso(models.Model):
     nombre = models.CharField(max_length=255)
@@ -40,6 +44,8 @@ class Curso(models.Model):
     profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
     institucion = models.ForeignKey(Institucion, on_delete=models.CASCADE)
     estudiantes = models.ManyToManyField(Estudiante)
+    inicio_clase = models.DateTimeField()
+    fin_clase = models.DateTimeField()
 
     def __str__(self):
         return self.nombre
